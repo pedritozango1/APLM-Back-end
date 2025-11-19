@@ -26,6 +26,7 @@ export class UserService {
     const user = await this.findByUsername(username);
     if (!user) return null;
     const valid = await bcrypt.compare(password, user.password);
+    console.log(valid ? user : null);
     return valid ? user : null;
   }
 }
