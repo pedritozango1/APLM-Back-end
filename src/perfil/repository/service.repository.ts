@@ -15,8 +15,7 @@ export class PerfilRepository {
 
   // Criar
   async create(data:CreatePerfilDto): Promise<Perfil> {
-    const perfil = new this.perfilModel(data);
-    return perfil.save();
+    return this.perfilModel.create(data);
   }
 
   // Buscar todos

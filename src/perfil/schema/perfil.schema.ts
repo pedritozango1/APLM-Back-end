@@ -5,9 +5,6 @@ export type PerfilDocument = Perfil & Document;
 
 @Schema({ timestamps: true })
 export class Perfil {
-  @Prop({ required: false })
-  _id: string;
-
   @Prop({ required: true })
   valor: string;
 
