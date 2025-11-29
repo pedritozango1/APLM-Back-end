@@ -36,4 +36,11 @@ export class AuthController {
   async findIdSession(@Param('idSessao') idSessao: string) {
     return this.authService.findIdSession(idSessao);
   }
+  @Get('listarSessao')
+  @ApiOperation({ summary: 'Listar seccao' })
+  @ApiResponse({ status: 200, description: 'Sessão encontrada'})
+  @ApiResponse({ status: 404, description: 'Sessão não encontrada' })
+  async findAll() {
+    return this.authService.findAll();
+  }
 }

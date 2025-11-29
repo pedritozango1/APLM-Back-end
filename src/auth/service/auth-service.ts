@@ -16,14 +16,15 @@ export class AuthService {
     if (!user) throw new Error('Credenciais inválidas');
     const sessionId = uuidv4();
     const sessao = new this.sessionModel({ user: user._id, sessionId, active: true });
-    const sec= await sessao.save();
-    const seccaoComUsario=await this.sessionModel.findById(sec._id).populate("user").exec();
-    console.log("retornar:",seccaoComUsario);
+    const sec = await sessao.save();
+    const seccaoComUsario = await this.sessionModel.findById(sec._id).populate("user").exec();
+    console.log("retornar:", seccaoComUsario);
     return seccaoComUsario;
-    
+
   }
   async findIdSession(idSession: string): Promise<Session | null> {
-    return this.sessionModel.findOne({ sessionId: idSession }).exec();
+    console.log(await this.sessionModel.findOne({ sessionId: idSession }).populate("user").exec())
+    return await this.sessionModel.findOne({ sessionId: idSession }).populate("user").exec();
   }
   async logout(sessionId: string) {
     const session = await this.sessionModel.findOne({ sessionId });
@@ -36,5 +37,8 @@ export class AuthService {
   async validateSession(sessionId: string): Promise<boolean> {
     const session = await this.sessionModel.findOne({ sessionId, active: true });
     return !!session;
+  }
+  async findAll(){
+     return await this.sessionModel.find().exec();
   }
 }
