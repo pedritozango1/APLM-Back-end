@@ -44,7 +44,7 @@ export class UserService {
      console.log("chave=>", chave);
     if (!chave) {
       const chave = new CreateChaveDto;
-      chave.nome = perfilDto.valor;
+      chave.nome = perfilDto.chave;
       const nova = await this.chaveRepository.create(chave);
     }
     const add=await this.usersRepository.addPerfil(idUsuario, perfilDto)

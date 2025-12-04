@@ -15,7 +15,7 @@ export class UsersRepository {
     return user.save();
   }
  async addPerfil(idUsuario: string, perfilDto: CreatePerfilDto): Promise<any> {
-  // ✅ Mongoose vai gerar o _id automaticamente
+  //Mongoose vai gerar o _id automaticamente
   const novoPerfil = {
     chave: perfilDto.chave,
     valor: perfilDto.valor
@@ -32,7 +32,7 @@ export class UsersRepository {
     throw new NotFoundException('Usuário não encontrado');
   }
 
-  // ✅ Retorna o último perfil adicionado (o mais recente)
+  //Retorna o último perfil adicionado (o mais recente)
   const perfilCriado = resultado.perfil![resultado.perfil!.length - 1];
   return perfilCriado;
 }
