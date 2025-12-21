@@ -3,6 +3,7 @@ import { Document, Types } from 'mongoose';
 import { Chave } from 'src/chave/schema/chave.schema';
 import { Local } from 'src/local/schema/local.schema';
 import { User } from 'src/user/schema/user-schema';
+import { ListaChave, ListaChaveSchema } from './lista-chave.schema';
 
 export type AnuncioDocument = Anuncio & Document;
 
@@ -18,8 +19,9 @@ export class Anuncio {
   @Prop({ type: Types.ObjectId, ref: 'Local', required: true })
   local: Types.ObjectId | Local;
 
-  @Prop([{ type: Types.ObjectId, ref: Chave.name }])
-  chave: Types.ObjectId[];
+  @Prop({ type: [ListaChaveSchema], default: [] })
+  listaChave: ListaChave[];
+
 
   // Referência correta para User (quem criou)
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })

@@ -16,16 +16,19 @@ import {
     ApiResponse,
     ApiParam,
     ApiQuery,
+    ApiBody,
 } from '@nestjs/swagger';
 import { AnuncioService } from '../service/anuncio.service';
 import { CreateAnuncioDto } from '../dto/create-anuncio.dto';
 import { UpdateAnuncioDto } from '../dto/update-anuncioa.dto';
+import { CreateLocalGpsDto } from 'src/local/dto/create-local-gps.dto';
+import { AnunciosProximosDto } from '../dto/anucio-proximo.dto';
 
 
 @ApiTags('anuncios')
 @Controller('anuncios')
 export class AnuncioController {
-    constructor(private readonly anuncioService: AnuncioService) {}
+    constructor(private readonly anuncioService: AnuncioService) { }
 
     @Post()
     @ApiOperation({ summary: 'Criar novo anúncio' })
@@ -40,6 +43,13 @@ export class AnuncioController {
     @ApiResponse({ status: 200, description: 'Lista de anúncios retornada com sucesso' })
     async findAll() {
         return this.anuncioService.findAll();
+    }
+    @Get("findUsuarios/:id")
+    @ApiParam({ name: "id" })
+    @ApiOperation({ summary: 'Listar todos os anúncios por usuario' })
+    @ApiResponse({ status: 200, description: 'Lista de anúncios por usario retornada com sucesso' })
+    async findUsuarios(@Param("id") id: string) {
+        return this.anuncioService.findUsuarios(id);
     }
 
     @Get('ativos')
@@ -69,6 +79,13 @@ export class AnuncioController {
     async count() {
         const total = await this.anuncioService.count();
         return { total };
+    }
+    @Get('testar')
+    @ApiOperation({ summary: 'Lista de todos os anuncios' })
+    @ApiResponse({ status: 200, description: 'anucioe localizados' })
+    async testarAnunciosProximos() {
+        return await this.anuncioService.testarAnunciosProximos();
+       
     }
 
     @Get('count/ativos')
@@ -169,5 +186,17 @@ export class AnuncioController {
     @ApiResponse({ status: 200, description: 'Anúncios expirados deletados' })
     async deleteExpirados() {
         return this.anuncioService.deleteExpirados();
+    }
+
+    @Get('proximos/:username')
+    @ApiOperation({ summary: 'Listar anúncios próximos com base na localização do usuário' })
+    @ApiParam({ name: 'username', description: 'Username do utilizador' })
+    @ApiBody({ type: AnunciosProximosDto })
+    @ApiResponse({ status: 200, description: 'Lista de anúncios próximos' })
+    async anunciosProximos(
+        @Param('username') username: string,
+        @Body() localizacaoActualUsuario: AnunciosProximosDto,
+    ) {
+        return this.anuncioService.anunciosProximos(localizacaoActualUsuario, username);
     }
 }

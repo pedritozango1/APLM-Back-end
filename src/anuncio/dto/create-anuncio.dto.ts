@@ -6,7 +6,30 @@ import {
     MaxLength,
     IsDateString,
     IsMongoId,
+    IsArray,
+    ValidateNested,
+    IsOptional,
 } from 'class-validator';
+import { Type } from 'class-transformer';
+
+// DTO para cada item da lista de chaves (restrição)
+export class ListaChaveDto {
+    @ApiProperty({
+        description: 'ID da Chave (ObjectId)',
+        example: '507f1f77bcf86cd799439011',
+    })
+    @IsMongoId({ message: 'ID da chave inválido' })
+    @IsNotEmpty()
+    chaveId: string;
+
+    @ApiProperty({
+        description: 'Valor da restrição',
+        example: 'Engenharia de Software',
+    })
+    @IsString()
+    @IsNotEmpty()
+    valor: string;
+}
 
 export class CreateAnuncioDto {
     @ApiProperty({ description: 'Título do anúncio', maxLength: 200 })
@@ -30,18 +53,25 @@ export class CreateAnuncioDto {
     local: string;
 
     @ApiProperty({
-        description: 'ID do Chave onde o anúncio será exibido',
-        example: '507f1f77bcf86cd799439011',
+        description: 'Lista de restrições (chaveId + valor)',
+        type: [ListaChaveDto],
+        required: false,
+        example: [
+            { chaveId: '507f1f77bcf86cd799439011', valor: 'Engenharia de Software' },
+            { chaveId: '507f1f77bcf86cd799439012', valor: '5' },
+        ],
     })
-    @IsMongoId({ message: 'ID do chave inválido' })
-    @IsNotEmpty()
-    chave: string[];
+    @IsArray()
+    @ValidateNested({ each: true })
+    @Type(() => ListaChaveDto)
+    @IsOptional()
+    listaChave?: ListaChaveDto[];
 
     @ApiProperty({
-        description: 'ID do Local onde o anúncio será exibido',
+        description: 'ID do usuário que criou o anúncio',
         example: '507f1f77bcf86cd799439011',
     })
-    @IsMongoId({ message: 'ID do local inválido' })
+    @IsMongoId({ message: 'ID do usuário inválido' })
     @IsNotEmpty()
     user: string;
 

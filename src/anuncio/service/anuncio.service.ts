@@ -3,17 +3,23 @@ import { CreateAnuncioDto } from '../dto/create-anuncio.dto';
 import { AnuncioDocument } from '../schema/anuncio.schema';
 import { UpdateAnuncioDto } from '../dto/update-anuncioa.dto';
 import { AnuncioRepository } from '../reposistory/anuncio.repository';
+import { CreateLocalGpsDto } from 'src/local/dto/create-local-gps.dto';
+import { Perfil } from 'src/user/schema/perfil.schema';
+import { AnunciosProximosDto } from '../dto/anucio-proximo.dto';
 
 @Injectable()
 export class AnuncioService {
     constructor(private readonly anuncioRepository: AnuncioRepository) {}
 
-    async create(createAnuncioDto: CreateAnuncioDto): Promise<AnuncioDocument> {
+    async create(createAnuncioDto: CreateAnuncioDto): Promise<AnuncioDocument | null> {
         return this.anuncioRepository.create(createAnuncioDto);
     }
 
     async findAll(): Promise<AnuncioDocument[]> {
         return this.anuncioRepository.findAll();
+    }
+    async findUsuarios(_idUsuario:string): Promise<AnuncioDocument[]> {
+        return this.anuncioRepository.findUsuarios(_idUsuario);
     }
 
     async findById(id: string): Promise<AnuncioDocument> {
@@ -42,6 +48,10 @@ export class AnuncioService {
 
     async findExpirados(): Promise<AnuncioDocument[]> {
         return this.anuncioRepository.findExpirados();
+    }
+    async anunciosProximos( localizacaoActualUsuario:AnunciosProximosDto,
+           username: string): Promise<AnuncioDocument[]> {
+        return await this.anuncioRepository.anunciosProximos(localizacaoActualUsuario,username);
     }
 
     async findByPeriodo(dataInicio: string, dataFim: string): Promise<AnuncioDocument[]> {
@@ -74,5 +84,8 @@ export class AnuncioService {
 
     async deleteExpirados(): Promise<{ deletedCount: number }> {
         return this.anuncioRepository.deleteExpirados();
+    }
+    async testarAnunciosProximos(){
+        return await this.anuncioRepository.testarAnunciosProximos();
     }
 }
